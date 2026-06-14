@@ -1,4 +1,4 @@
-"""contextpacker — fit anything into an LLM context window.
+"""contextcram — fit anything into an LLM context window.
 
 A tiny, zero-dependency, priority-aware token-budget packer.
 """
@@ -23,7 +23,7 @@ from .tokenizers import (
 )
 
 try:
-    __version__ = version("contextpacker")
+    __version__ = version("contextcram")
 except PackageNotFoundError:  # running from a source checkout without install
     __version__ = "0.0.0"
 

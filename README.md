@@ -1,8 +1,8 @@
-# contextpacker
+# contextcram
 
-[![PyPI version](https://img.shields.io/pypi/v/contextpacker.svg)](https://pypi.org/project/contextpacker/)
-[![Python versions](https://img.shields.io/pypi/pyversions/contextpacker.svg)](https://pypi.org/project/contextpacker/)
-[![CI](https://github.com/Waelr1985/contextpacker/actions/workflows/ci.yml/badge.svg)](https://github.com/Waelr1985/contextpacker/actions/workflows/ci.yml)
+[![PyPI version](https://img.shields.io/pypi/v/contextcram.svg)](https://pypi.org/project/contextcram/)
+[![Python versions](https://img.shields.io/pypi/pyversions/contextcram.svg)](https://pypi.org/project/contextcram/)
+[![CI](https://github.com/Waelr1985/contextcram/actions/workflows/ci.yml/badge.svg)](https://github.com/Waelr1985/contextcram/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Fit anything into an LLM context window.** A tiny, zero-dependency, priority-aware
@@ -10,11 +10,11 @@ token-budget packer for RAG pipelines and agents.
 
 Every RAG or agent app has the same problem: you have too much stuff — a system
 prompt, chat history, retrieved documents, tool output — and a fixed token
-budget. `contextpacker` packs it all in *by priority*, truncating, trimming, or
+budget. `contextcram` packs it all in *by priority*, truncating, trimming, or
 dropping the least important pieces so the important ones always make it.
 
 ```python
-from contextpacker import Packer
+from contextcram import Packer
 
 packer = Packer(budget=8000)  # token budget
 
@@ -43,9 +43,9 @@ print(result.dropped_names)   # what didn't make the cut
 ## Installation
 
 ```bash
-pip install contextpacker
+pip install contextcram
 # optional: exact token counts via tiktoken
-pip install "contextpacker[tiktoken]"
+pip install "contextcram[tiktoken]"
 ```
 
 ## Strategies
@@ -65,7 +65,7 @@ When an optional item doesn't fully fit, its `strategy` decides what happens:
 ## Exact token counts
 
 ```python
-from contextpacker import Packer, tiktoken_tokenizer
+from contextcram import Packer, tiktoken_tokenizer
 
 packer = Packer(budget=8000, tokenizer=tiktoken_tokenizer("gpt-4o"))
 ```
@@ -84,8 +84,8 @@ packer.add(text, priority=42, strategy="truncate")
 ## Development
 
 ```bash
-git clone https://github.com/Waelr1985/contextpacker.git
-cd contextpacker
+git clone https://github.com/Waelr1985/contextcram.git
+cd contextcram
 uv sync
 uv run pytest
 uv run ruff check .

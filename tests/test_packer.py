@@ -1,10 +1,10 @@
-"""Tests for contextpacker.Packer."""
+"""Tests for contextcram.Packer."""
 
 from __future__ import annotations
 
 import pytest
 
-from contextpacker import BudgetExceeded, HeuristicTokenizer, Packer, Strategy
+from contextcram import BudgetExceeded, HeuristicTokenizer, Packer, Strategy
 
 
 def tok(chars_per_token: float = 1.0) -> HeuristicTokenizer:

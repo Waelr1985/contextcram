@@ -1,10 +1,10 @@
-"""Tests for contextpacker tokenizers."""
+"""Tests for contextcram tokenizers."""
 
 from __future__ import annotations
 
 import pytest
 
-from contextpacker import CallableTokenizer, HeuristicTokenizer
+from contextcram import CallableTokenizer, HeuristicTokenizer
 
 
 def test_heuristic_count_rounds_up():

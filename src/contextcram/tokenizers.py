@@ -1,4 +1,4 @@
-"""Token counting and truncation backends for contextpacker.
+"""Token counting and truncation backends for contextcram.
 
 The packer only needs two operations from a tokenizer: count the tokens in a
 string, and truncate a string to at most N tokens (keeping the head). Anything
@@ -85,7 +85,7 @@ def tiktoken_tokenizer(model: str = "gpt-4o") -> CallableTokenizer:
     """Build a :class:`CallableTokenizer` backed by tiktoken.
 
     Requires the optional ``tiktoken`` dependency (``pip install
-    contextpacker[tiktoken]``). Falls back to the ``cl100k_base`` encoding for
+    contextcram[tiktoken]``). Falls back to the ``cl100k_base`` encoding for
     unknown models.
     """
     import tiktoken

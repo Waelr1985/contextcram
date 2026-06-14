@@ -93,7 +93,7 @@ class Packer:
 
     Example::
 
-        from contextpacker import Packer
+        from contextcram import Packer
 
         packer = Packer(budget=8000)
         packer.add(system_prompt, priority="required")
