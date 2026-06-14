@@ -1,0 +1,85 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "contextpacker"
+version = "0.1.0"
+description = "Fit anything into an LLM context window — a tiny, zero-dependency, priority-aware token-budget packer."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "waelr1985", email = "waelr1985@gmail.com" }]
+keywords = [
+    "llm",
+    "context-window",
+    "tokens",
+    "token-budget",
+    "rag",
+    "prompt",
+    "prompt-engineering",
+    "agents",
+    "openai",
+    "anthropic",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = []
+
+[project.optional-dependencies]
+tiktoken = ["tiktoken>=0.5"]
+
+[project.urls]
+Homepage = "https://github.com/waelr1985/contextpacker"
+Repository = "https://github.com/waelr1985/contextpacker"
+Issues = "https://github.com/waelr1985/contextpacker/issues"
+Changelog = "https://github.com/waelr1985/contextpacker/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+    "mypy>=1.11",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/contextpacker"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=contextpacker --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["src"]
+
+[[tool.mypy.overrides]]
+module = ["tiktoken"]
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["contextpacker"]
+branch = true
