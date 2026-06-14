@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/contextpacker.svg)](https://pypi.org/project/contextpacker/)
 [![Python versions](https://img.shields.io/pypi/pyversions/contextpacker.svg)](https://pypi.org/project/contextpacker/)
-[![CI](https://github.com/waelr1985/contextpacker/actions/workflows/ci.yml/badge.svg)](https://github.com/waelr1985/contextpacker/actions/workflows/ci.yml)
+[![CI](https://github.com/Waelr1985/contextpacker/actions/workflows/ci.yml/badge.svg)](https://github.com/Waelr1985/contextpacker/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Fit anything into an LLM context window.** A tiny, zero-dependency, priority-aware
@@ -84,7 +84,7 @@ packer.add(text, priority=42, strategy="truncate")
 ## Development
 
 ```bash
-git clone https://github.com/waelr1985/contextpacker.git
+git clone https://github.com/Waelr1985/contextpacker.git
 cd contextpacker
 uv sync
 uv run pytest

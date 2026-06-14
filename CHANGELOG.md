@@ -18,5 +18,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `CallableTokenizer` and `tiktoken_tokenizer` for exact counts.
 - `PackResult` with `used_tokens`, `remaining`, `dropped`, and per-item detail.
 
-[Unreleased]: https://github.com/waelr1985/contextpacker/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/waelr1985/contextpacker/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Waelr1985/contextpacker/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Waelr1985/contextpacker/releases/tag/v0.1.0
