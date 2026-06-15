@@ -105,6 +105,62 @@ integer (higher is kept first):
 packer.add(text, priority=42, strategy="truncate")
 ```
 
+## Real-world usage
+
+### With LangChain
+
+Pack a system prompt, retrieved docs, and chat history into a `gpt-4o` budget —
+leaving room for the answer — then hand the result to the model:
+
+```python
+from contextcram import Packer
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage
+
+llm = ChatOpenAI(model="gpt-4o")
+
+docs = [d.page_content for d in retriever.invoke(question)]
+history = [f"{m.type}: {m.content}" for m in memory.messages]
+
+ctx = (
+    Packer(model="gpt-4o", reserve=1500)                          # room for the reply
+    .add(SYSTEM_PROMPT, priority="required")                      # never dropped
+    .add(history, priority="high", strategy="trim")               # drop oldest turns
+    .add("\n\n".join(docs), priority="medium", strategy="drop")   # whole docs only
+    .fit()
+)
+
+response = llm.invoke([SystemMessage(ctx.text), HumanMessage(question)])
+```
+
+### With the raw Anthropic SDK
+
+Tie `reserve` to `max_tokens` so the input can never crowd out the response:
+
+```python
+import anthropic
+from contextcram import Packer
+
+client = anthropic.Anthropic()
+REPLY_TOKENS = 4000
+
+ctx = (
+    Packer(model="claude-opus-4-8", reserve=REPLY_TOKENS)
+    .add(SYSTEM_PROMPT, priority="required")
+    .add(chat_history, priority="high", strategy="trim")
+    .add(retrieved_docs, priority="medium", strategy="drop")
+    .fit()
+)
+
+msg = client.messages.create(
+    model="claude-opus-4-8",
+    max_tokens=REPLY_TOKENS,        # matches reserve above
+    system=ctx.text,
+    messages=[{"role": "user", "content": question}],
+)
+print(f"packed {ctx.used_tokens} tokens; dropped {ctx.dropped_names}")
+```
+
 ## Alternatives
 
 Priority-based context assembly isn't a new idea, and depending on your needs
