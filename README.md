@@ -62,6 +62,30 @@ When an optional item doesn't fully fit, its `strategy` decides what happens:
 `required` items are always kept; if they alone exceed the budget, a
 `BudgetExceeded` error is raised.
 
+## Model-aware budgets
+
+Skip the magic number — set the budget from the model, and reserve room for the
+response in one go:
+
+```python
+from contextcram import Packer
+
+# 128k window for gpt-4o, holding back 2k tokens for the model's reply
+packer = Packer(model="gpt-4o", reserve=2000)
+print(packer.full_budget)  # 128000
+print(packer.budget)       # 126000  (effective budget you pack into)
+```
+
+`reserve` is the easy way to avoid the classic "prompt fit, but no room left to
+answer" failure. Unknown model? Pass `budget=` explicitly or register it:
+
+```python
+from contextcram import register_model
+
+register_model("my-internal-llm", 32000)
+packer = Packer(model="my-internal-llm", reserve=1000)
+```
+
 ## Exact token counts
 
 ```python
@@ -80,6 +104,22 @@ integer (higher is kept first):
 ```python
 packer.add(text, priority=42, strategy="truncate")
 ```
+
+## Alternatives
+
+Priority-based context assembly isn't a new idea, and depending on your needs
+one of these may fit better — `contextcram` deliberately trades features for
+simplicity and zero dependencies:
+
+| Library | Approach | When to prefer it over `contextcram` |
+| ------- | -------- | ------------------------------------ |
+| [Priompt](https://github.com/anysphere/priompt) / [PriomptiPy](https://pypi.org/project/priompt/) | Component/JSX-style priority rendering | You want fine-grained, composable prompt components and don't mind a learning curve |
+| [Prompt Poet](https://pypi.org/project/prompt-poet/) | YAML + Jinja2 templating with cache-aware, priority truncation | You need templating and production GPU prefix-cache optimization |
+| [LLMLingua](https://github.com/microsoft/LLMLingua) | Model-based prompt *compression* | You want to shrink text rather than drop/truncate whole pieces |
+
+**Choose `contextcram` when** you want a tiny, zero-dependency, framework-agnostic
+helper with a 3-line API (`Packer(...).add(...).fit()`) that does one thing —
+fit prioritized pieces into a budget — and gets out of your way.
 
 ## Development
 

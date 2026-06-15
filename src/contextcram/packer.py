@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from .models import context_window_for
 from .tokenizers import HeuristicTokenizer, Tokenizer
 
 Content = str | list[str]
@@ -73,8 +74,9 @@ class PackResult:
     text: str
     items: list[FittedItem]
     used_tokens: int
-    budget: int
+    budget: int  # effective budget packed against (full budget minus reserve)
     dropped: list[Item] = field(default_factory=list)
+    reserved: int = 0
 
     @property
     def remaining(self) -> int:
@@ -95,7 +97,7 @@ class Packer:
 
         from contextcram import Packer
 
-        packer = Packer(budget=8000)
+        packer = Packer(model="gpt-4o", reserve=2000)  # or Packer(budget=8000)
         packer.add(system_prompt, priority="required")
         packer.add(history, priority="high", strategy="trim")
         packer.add(docs, priority="medium", strategy="drop")
@@ -105,13 +107,33 @@ class Packer:
 
     def __init__(
         self,
-        budget: int,
+        budget: int | None = None,
         tokenizer: Tokenizer | None = None,
         joiner: str = "\n\n",
+        *,
+        model: str | None = None,
+        reserve: int = 0,
     ) -> None:
+        """Create a packer.
+
+        Provide either an explicit ``budget`` (in tokens) or a ``model`` name to
+        look the budget up from the context-window registry. ``reserve`` holds
+        back tokens (e.g. for the model's response), so the effective packing
+        budget is ``budget - reserve``. An explicit ``budget`` wins over ``model``.
+        """
+        if reserve < 0:
+            raise ValueError("reserve must be non-negative")
+        if budget is None:
+            if model is None:
+                raise ValueError("provide either budget=<int> or model=<name>")
+            budget = context_window_for(model)
         if budget < 0:
             raise ValueError("budget must be non-negative")
-        self.budget = budget
+        self.model = model
+        self.reserve = reserve
+        self.full_budget = budget
+        #: Effective budget packed against, after holding back ``reserve``.
+        self.budget = max(0, budget - reserve)
         self.tokenizer: Tokenizer = tokenizer or HeuristicTokenizer()
         self.joiner = joiner
         self._items: list[Item] = []
@@ -217,6 +239,7 @@ class Packer:
             used_tokens=self.budget - remaining,
             budget=self.budget,
             dropped=dropped,
+            reserved=self.reserve,
         )
 
     # -- internals ---------------------------------------------------------

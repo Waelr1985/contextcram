@@ -7,6 +7,11 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
+from .models import (
+    MODEL_CONTEXT_WINDOWS,
+    context_window_for,
+    register_model,
+)
 from .packer import (
     BudgetExceeded,
     FittedItem,
@@ -38,5 +43,8 @@ __all__ = [
     "HeuristicTokenizer",
     "CallableTokenizer",
     "tiktoken_tokenizer",
+    "MODEL_CONTEXT_WINDOWS",
+    "register_model",
+    "context_window_for",
     "__version__",
 ]
